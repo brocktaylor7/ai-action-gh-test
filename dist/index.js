@@ -71422,7 +71422,7 @@ let PullRequestCommentCreator = class PullRequestCommentCreator extends shared_1
                     return yield this.octokit.issues.updateComment({
                         owner: this.githubObj.context.repo.owner,
                         repo: this.githubObj.context.repo.repo,
-                        body: reportMarkdown,
+                        body: reportMarkdown + '\n\nanother test',
                         comment_id: existingComment.id,
                     });
                 }));
