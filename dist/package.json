@@ -19,7 +19,7 @@
     "homepage": "https://github.com/microsoft/accessibility-insights-action#readme",
     "dependencies": {
         "axe-core": "4.3.2",
-        "accessibility-insights-report": "4.2.0",
+        "accessibility-insights-report": "4.2.1",
         "accessibility-insights-scan": "0.10.3"
     }
 }

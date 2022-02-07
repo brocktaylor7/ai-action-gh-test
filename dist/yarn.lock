@@ -2144,9 +2144,9 @@
   integrity sha512-7EIraBEyRHEe7CH+Fm1XvgqU6uwZN8Q7jppJGcqjROMT29qhAuuOxYB1uEY5UMYQKEmA5D+5tBnhdaPXSsLONA==
 
 "@types/node@>=10.0.0":
-  version "17.0.12"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.12.tgz#f7aa331b27f08244888c47b7df126184bc2339c5"
-  integrity sha512-4YpbAsnJXWYK/fpTVFlMIcUIho2AYCi4wg5aNPrG1ng7fn/1/RZfCIpRCiBX+12RVa34RluilnvCqD+g3KiSiA==
+  version "17.0.16"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.16.tgz#e3733f46797b9df9e853ca9f719c8a6f7b84cd26"
+  integrity sha512-ydLaGVfQOQ6hI1xK2A5nVh8bl0OGoIfYMxPWHqqYe9bTkWCfqiVvZoh2I/QF2sNSkZzZyROBoTefIEI+PB6iIA==
 
 "@types/node@^10.0.3":
   version "10.17.60"
@@ -2636,6 +2636,21 @@ accessibility-insights-report@4.2.0:
     classnames "^2.3.1"
     lodash "^4.17.21"
     luxon "^2.0.2"
+    office-ui-fabric-react "7.98.1"
+    react "^16.14.0"
+    react-dom "^16.14.0"
+    react-helmet "^6.1.0"
+    uuid "^8.3.2"
+
+accessibility-insights-report@4.2.1:
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/accessibility-insights-report/-/accessibility-insights-report-4.2.1.tgz#8da0fdea79e1a2d419f4538067d65ee09547c183"
+  integrity sha512-OJe/pO/Dvyk9iZ28pV9ScXQu/77iLdVqaNMpfiOSnWEcbK5VdE6i6o5XL0Wf0zDWUBuKpJOLmQuTIINDRW/BYg==
+  dependencies:
+    axe-core "4.3.2"
+    classnames "^2.3.1"
+    lodash "^4.17.21"
+    luxon "^2.3.0"
     office-ui-fabric-react "7.98.1"
     react "^16.14.0"
     react-dom "^16.14.0"
@@ -7283,6 +7298,11 @@ luxon@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/luxon/-/luxon-2.0.2.tgz#11f2cd4a11655fdf92e076b5782d7ede5bcdd133"
   integrity sha512-ZRioYLCgRHrtTORaZX1mx+jtxKtKuI5ZDvHNAmqpUzGqSrR+tL4FVLn/CUGMA3h0+AKD1MAxGI5GnCqR5txNqg==
+
+luxon@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/luxon/-/luxon-2.3.0.tgz#bf16a7e642513c2a20a6230a6a41b0ab446d0045"
+  integrity sha512-gv6jZCV+gGIrVKhO90yrsn8qXPKD8HYZJtrUDSfEbow8Tkw84T9OnCyJhWvnJIaIF/tBuiAjZuQHUt1LddX2mg==
 
 make-dir@^2.1.0:
   version "2.1.0"
