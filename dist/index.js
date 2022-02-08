@@ -71285,12 +71285,16 @@ __webpack_require__(/*! reflect-metadata */ "../../node_modules/reflect-metadata
 __webpack_require__(/*! ./module-name-mapper */ "./src/module-name-mapper.ts");
 const shared_1 = __webpack_require__(/*! @accessibility-insights-action/shared */ "../shared/dist/index.js");
 const shared_2 = __webpack_require__(/*! @accessibility-insights-action/shared */ "../shared/dist/index.js");
+const shared_3 = __webpack_require__(/*! @accessibility-insights-action/shared */ "../shared/dist/index.js");
+const shared_4 = __webpack_require__(/*! @accessibility-insights-action/shared */ "../shared/dist/index.js");
 const setup_ioc_container_1 = __webpack_require__(/*! ./ioc/setup-ioc-container */ "./src/ioc/setup-ioc-container.ts");
 (() => __awaiter(void 0, void 0, void 0, function* () {
+    (0, shared_2.hookStderr)();
+    (0, shared_3.hookStdout)();
     const container = (0, setup_ioc_container_1.setupIocContainer)();
     const logger = container.get(shared_1.Logger);
     yield logger.setup();
-    const scanner = container.get(shared_2.Scanner);
+    const scanner = container.get(shared_4.Scanner);
     yield scanner.scan();
 }))().catch((error) => {
     console.log('Exception thrown in action: ', error);
@@ -73066,7 +73070,7 @@ exports.checkRunDetailsTitle = `Accessibility Automated Checks Results`;
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.ArtifactsInfoProvider = exports.TaskConfig = exports.checkRunName = exports.checkRunDetailsTitle = exports.disclaimerText = exports.productTitle = exports.ReportMarkdownConvertor = exports.ProgressReporter = exports.iocTypes = exports.Scanner = exports.Logger = exports.setupSharedIocContainer = void 0;
+exports.hookStderr = exports.hookStdout = exports.ArtifactsInfoProvider = exports.TaskConfig = exports.checkRunName = exports.checkRunDetailsTitle = exports.disclaimerText = exports.productTitle = exports.ReportMarkdownConvertor = exports.ProgressReporter = exports.iocTypes = exports.Scanner = exports.Logger = exports.setupSharedIocContainer = void 0;
 var setup_ioc_container_1 = __webpack_require__(/*! ./ioc/setup-ioc-container */ "../shared/dist/ioc/setup-ioc-container.js");
 Object.defineProperty(exports, "setupSharedIocContainer", ({ enumerable: true, get: function () { return setup_ioc_container_1.setupSharedIocContainer; } }));
 var logger_1 = __webpack_require__(/*! ./logger/logger */ "../shared/dist/logger/logger.js");
@@ -73090,6 +73094,10 @@ var task_config_1 = __webpack_require__(/*! ./task-config */ "../shared/dist/tas
 Object.defineProperty(exports, "TaskConfig", ({ enumerable: true, get: function () { return task_config_1.TaskConfig; } }));
 var artifacts_info_provider_1 = __webpack_require__(/*! ./artifacts-info-provider */ "../shared/dist/artifacts-info-provider.js");
 Object.defineProperty(exports, "ArtifactsInfoProvider", ({ enumerable: true, get: function () { return artifacts_info_provider_1.ArtifactsInfoProvider; } }));
+var hook_stdout_1 = __webpack_require__(/*! ./output-hooks/hook-stdout */ "../shared/dist/output-hooks/hook-stdout.js");
+Object.defineProperty(exports, "hookStdout", ({ enumerable: true, get: function () { return hook_stdout_1.hookStdout; } }));
+var hook_stderr_1 = __webpack_require__(/*! ./output-hooks/hook-stderr */ "../shared/dist/output-hooks/hook-stderr.js");
+Object.defineProperty(exports, "hookStderr", ({ enumerable: true, get: function () { return hook_stderr_1.hookStderr; } }));
 //# sourceMappingURL=index.js.map
 
 /***/ }),
@@ -73948,6 +73956,181 @@ exports.ResultMarkdownBuilder = ResultMarkdownBuilder;
 
 /***/ }),
 
+/***/ "../shared/dist/output-hooks/hook-stderr.js":
+/*!**************************************************!*\
+  !*** ../shared/dist/output-hooks/hook-stderr.js ***!
+  \**************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.hookStderr = void 0;
+const process_1 = __webpack_require__(/*! process */ "process");
+const hook_stream_1 = __webpack_require__(/*! ./hook-stream */ "../shared/dist/output-hooks/hook-stream.js");
+const stderr_transformer_1 = __webpack_require__(/*! ./stderr-transformer */ "../shared/dist/output-hooks/stderr-transformer.js");
+const hookStderr = () => {
+    return (0, hook_stream_1.hookStream)(process_1.stderr, stderr_transformer_1.stderrTransformer);
+};
+exports.hookStderr = hookStderr;
+//# sourceMappingURL=hook-stderr.js.map
+
+/***/ }),
+
+/***/ "../shared/dist/output-hooks/hook-stdout.js":
+/*!**************************************************!*\
+  !*** ../shared/dist/output-hooks/hook-stdout.js ***!
+  \**************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.hookStdout = void 0;
+const process_1 = __webpack_require__(/*! process */ "process");
+const hook_stream_1 = __webpack_require__(/*! ./hook-stream */ "../shared/dist/output-hooks/hook-stream.js");
+const stdout_transformer_1 = __webpack_require__(/*! ./stdout-transformer */ "../shared/dist/output-hooks/stdout-transformer.js");
+const hookStdout = () => {
+    return (0, hook_stream_1.hookStream)(process_1.stdout, stdout_transformer_1.stdoutTransformer);
+};
+exports.hookStdout = hookStdout;
+//# sourceMappingURL=hook-stdout.js.map
+
+/***/ }),
+
+/***/ "../shared/dist/output-hooks/hook-stream.js":
+/*!**************************************************!*\
+  !*** ../shared/dist/output-hooks/hook-stream.js ***!
+  \**************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.hookStream = void 0;
+// This method hooks a stream at its _write method, which is the lowest level that
+// is exposed via the interface. Calling the method returned from hookStream
+// removes the hook by restoring the previous _write method.
+const hookStream = (stream, transformer) => {
+    const oldWrite = stream._write;
+    const unhook = () => {
+        stream._write = oldWrite;
+    };
+    const newWrite = (chunk, encoding, callback) => {
+        const transformedValue = transformer(String(chunk));
+        if (transformedValue) {
+            oldWrite.call(stream, transformedValue, encoding, callback);
+        }
+    };
+    stream._write = newWrite;
+    return unhook;
+};
+exports.hookStream = hookStream;
+//# sourceMappingURL=hook-stream.js.map
+
+/***/ }),
+
+/***/ "../shared/dist/output-hooks/stderr-transformer.js":
+/*!*********************************************************!*\
+  !*** ../shared/dist/output-hooks/stderr-transformer.js ***!
+  \*********************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.stderrTransformer = void 0;
+const stderrTransformer = (rawData) => {
+    if (rawData.startsWith('waitFor is deprecated'))
+        return null;
+    if (rawData.startsWith('Some icons were re-registered.'))
+        return null;
+    return rawData;
+};
+exports.stderrTransformer = stderrTransformer;
+//# sourceMappingURL=stderr-transformer.js.map
+
+/***/ }),
+
+/***/ "../shared/dist/output-hooks/stdout-transformer.js":
+/*!*********************************************************!*\
+  !*** ../shared/dist/output-hooks/stdout-transformer.js ***!
+  \*********************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.evaluateRegexTransformation = exports.stdoutTransformer = void 0;
+const debugPrefix = '##[debug]';
+const regexTransformations = [
+    {
+        regex: new RegExp('^\\[Exception\\]'),
+        method: useUnmodifiedString,
+    },
+    {
+        regex: new RegExp('^##\\[error\\]'),
+        method: useUnmodifiedString,
+    },
+    {
+        regex: new RegExp('^##\\[debug\\]'),
+        method: useUnmodifiedString,
+    },
+    {
+        regex: new RegExp('^##vso\\[task.debug\\]'),
+        method: useUnmodifiedString,
+    },
+    {
+        regex: new RegExp('^\\[Trace\\]\\[info\\] === '),
+        method: replaceFirstMatchWithDebugPrefix,
+    },
+    {
+        // eslint-disable-next-line no-control-regex
+        regex: new RegExp('^\u001B\\[32mINFO\u001b\\[39m '),
+        method: replaceFirstMatchWithDebugPrefix,
+    },
+];
+const stdoutTransformer = (rawData) => {
+    for (const startSubstitution of regexTransformations) {
+        const newData = evaluateRegexTransformation(rawData, startSubstitution.regex, startSubstitution.method);
+        if (newData) {
+            return newData;
+        }
+    }
+    return prependDebugPrefix(rawData);
+};
+exports.stdoutTransformer = stdoutTransformer;
+function evaluateRegexTransformation(input, regex, modifier) {
+    const matches = input.match(regex);
+    if (matches) {
+        return modifier(input, regex);
+    }
+    return null;
+}
+exports.evaluateRegexTransformation = evaluateRegexTransformation;
+function useUnmodifiedString(input) {
+    return input;
+}
+function replaceFirstMatchWithDebugPrefix(input, regex) {
+    return `${debugPrefix} ${input.replace(regex, '$`')}`;
+}
+function prependDebugPrefix(input) {
+    return `${debugPrefix} ${input}`;
+}
+//# sourceMappingURL=stdout-transformer.js.map
+
+/***/ }),
+
 /***/ "../shared/dist/progress-reporter/all-progress-reporter.js":
 /*!*****************************************************************!*\
   !*** ../shared/dist/progress-reporter/all-progress-reporter.js ***!
@@ -74793,6 +74976,17 @@ module.exports = require("os");
 
 "use strict";
 module.exports = require("path");
+
+/***/ }),
+
+/***/ "process":
+/*!**************************!*\
+  !*** external "process" ***!
+  \**************************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("process");
 
 /***/ }),
 
