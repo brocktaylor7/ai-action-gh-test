@@ -71374,7 +71374,12 @@ function setupIocContainer(container = new inversify.Container({ autoBindInjecta
         return [checkRunCreator, consoleCommentCreator];
     })
         .inSingletonScope();
-    container.bind(rest_1.Octokit).toSelf().inSingletonScope();
+    container
+        .bind(rest_1.Octokit)
+        .toDynamicValue(() => {
+        return new rest_1.Octokit();
+    })
+        .inSingletonScope();
     container.bind(shared_1.iocTypes.ArtifactsInfoProvider).to(gh_artifacts_info_provider_1.GitHubArtifactsInfoProvider).inSingletonScope();
     return container;
 }
