@@ -71376,8 +71376,9 @@ function setupIocContainer(container = new inversify.Container({ autoBindInjecta
         .inSingletonScope();
     container
         .bind(rest_1.Octokit)
-        .toDynamicValue(() => {
-        return new rest_1.Octokit();
+        .toDynamicValue((context) => {
+        const taskConfig = context.container.get(gh_task_config_1.GHTaskConfig);
+        return new rest_1.Octokit({ auth: taskConfig.getToken() });
     })
         .inSingletonScope();
     container.bind(shared_1.iocTypes.ArtifactsInfoProvider).to(gh_artifacts_info_provider_1.GitHubArtifactsInfoProvider).inSingletonScope();
