@@ -71093,10 +71093,10 @@ let ConsoleCommentCreator = class ConsoleCommentCreator extends shared_1.Progres
         return __awaiter(this, void 0, void 0, function* () {
             const reportMarkdown = this.reportMarkdownConvertor.convert(combinedReportResult);
             this.logger.logInfo(reportMarkdown);
-            const failedChecks = combinedReportResult.results.resultsByRule.failed.reduce((a, b) => a + b.failed.length, 0);
-            if (failedChecks > 0) {
-                this.actionCoreObj.setFailed(`${failedChecks} accessibility checks failed`);
-            }
+            // const failedChecks = combinedReportResult.results.resultsByRule.failed.reduce((a, b) => a + b.failed.length, 0);
+            // if (failedChecks > 0) {
+            //     this.actionCoreObj.setFailed(`${failedChecks} accessibility checks failed`);
+            // }
             return Promise.resolve();
         });
     }
