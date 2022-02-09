@@ -71200,7 +71200,7 @@ let ConsoleCommentCreator = class ConsoleCommentCreator extends shared_1.Progres
     completeRun(combinedReportResult) {
         return __awaiter(this, void 0, void 0, function* () {
             const reportMarkdown = this.reportMarkdownConvertor.convert(combinedReportResult);
-            this.logMessage(reportMarkdown);
+            this.logger.logInfo(reportMarkdown);
             return Promise.resolve();
         });
     }
@@ -71209,9 +71209,6 @@ let ConsoleCommentCreator = class ConsoleCommentCreator extends shared_1.Progres
         return __awaiter(this, void 0, void 0, function* () {
             throw message;
         });
-    }
-    logMessage(message) {
-        this.logger.logInfo(`${message}`);
     }
 };
 ConsoleCommentCreator = __decorate([
@@ -71377,13 +71374,7 @@ function setupIocContainer(container = new inversify.Container({ autoBindInjecta
         return [checkRunCreator, consoleCommentCreator];
     })
         .inSingletonScope();
-    container
-        .bind(rest_1.Octokit)
-        .toDynamicValue((context) => {
-        const taskConfig = context.container.get(gh_task_config_1.GHTaskConfig);
-        return new rest_1.Octokit({ auth: taskConfig.getToken() });
-    })
-        .inSingletonScope();
+    container.bind(rest_1.Octokit).toSelf().inSingletonScope();
     container.bind(shared_1.iocTypes.ArtifactsInfoProvider).to(gh_artifacts_info_provider_1.GitHubArtifactsInfoProvider).inSingletonScope();
     return container;
 }
@@ -74088,6 +74079,18 @@ const regexTransformations = [
     },
     {
         regex: new RegExp('^##vso\\[task.debug\\]'),
+        method: useUnmodifiedString,
+    },
+    {
+        regex: new RegExp('^Processing page .*'),
+        method: useUnmodifiedString,
+    },
+    {
+        regex: new RegExp('^Discovered \\d* links on page '),
+        method: useUnmodifiedString,
+    },
+    {
+        regex: new RegExp('^Found \\d* accessibility issues on page '),
         method: useUnmodifiedString,
     },
     {
