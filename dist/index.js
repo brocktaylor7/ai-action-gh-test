@@ -71248,7 +71248,7 @@ function setupIocContainer(container = new inversify.Container({ autoBindInjecta
         .inSingletonScope();
     container
         .bind(rest_1.Octokit)
-        .toDynamicValue((context) => {
+        .toDynamicValue(() => {
         // const taskConfig = context.container.get(GHTaskConfig);
         return new rest_1.Octokit();
     })
@@ -71361,7 +71361,7 @@ let GHTaskConfig = class GHTaskConfig extends shared_1.TaskConfig {
         return this.actionCoreObj.getInput('scan-url-relative-path');
     }
     getToken() {
-        return this.actionCoreObj.getInput('repo-token');
+        return '';
     }
     getChromePath() {
         let chromePath;
