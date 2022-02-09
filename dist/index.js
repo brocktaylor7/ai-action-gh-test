@@ -71031,11 +71031,30 @@ function toIdentifier (str) {
 
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
 };
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
@@ -71055,13 +71074,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 var _a, _b;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ConsoleCommentCreator = void 0;
+const actionCore = __importStar(__webpack_require__(/*! @actions/core */ "../../node_modules/@actions/core/lib/core.js"));
 const inversify_1 = __webpack_require__(/*! inversify */ "../../node_modules/inversify/lib/inversify.js");
 const shared_1 = __webpack_require__(/*! @accessibility-insights-action/shared */ "../shared/dist/index.js");
 let ConsoleCommentCreator = class ConsoleCommentCreator extends shared_1.ProgressReporter {
-    constructor(reportMarkdownConvertor, logger) {
+    constructor(reportMarkdownConvertor, logger, actionCoreObj = actionCore) {
         super();
         this.reportMarkdownConvertor = reportMarkdownConvertor;
         this.logger = logger;
+        this.actionCoreObj = actionCoreObj;
     }
     start() {
         // We don't do anything for pull request flow
@@ -71072,6 +71093,10 @@ let ConsoleCommentCreator = class ConsoleCommentCreator extends shared_1.Progres
         return __awaiter(this, void 0, void 0, function* () {
             const reportMarkdown = this.reportMarkdownConvertor.convert(combinedReportResult);
             this.logger.logInfo(reportMarkdown);
+            const failedChecks = combinedReportResult.results.resultsByRule.failed.reduce((a, b) => a + b.failed.length, 0);
+            if (failedChecks > 0) {
+                this.actionCoreObj.setFailed(`${failedChecks} accessibility checks failed`);
+            }
             return Promise.resolve();
         });
     }
@@ -71086,7 +71111,7 @@ ConsoleCommentCreator = __decorate([
     (0, inversify_1.injectable)(),
     __param(0, (0, inversify_1.inject)(shared_1.ReportMarkdownConvertor)),
     __param(1, (0, inversify_1.inject)(shared_1.Logger)),
-    __metadata("design:paramtypes", [typeof (_a = typeof shared_1.ReportMarkdownConvertor !== "undefined" && shared_1.ReportMarkdownConvertor) === "function" ? _a : Object, typeof (_b = typeof shared_1.Logger !== "undefined" && shared_1.Logger) === "function" ? _b : Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof shared_1.ReportMarkdownConvertor !== "undefined" && shared_1.ReportMarkdownConvertor) === "function" ? _a : Object, typeof (_b = typeof shared_1.Logger !== "undefined" && shared_1.Logger) === "function" ? _b : Object, Object])
 ], ConsoleCommentCreator);
 exports.ConsoleCommentCreator = ConsoleCommentCreator;
 
