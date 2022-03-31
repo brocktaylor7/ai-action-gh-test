@@ -72581,7 +72581,11 @@ let ResultConsoleLogBuilder = class ResultConsoleLogBuilder {
                 this.failureDetailsBaseline(combinedReportResult, baselineInfo),
                 (0, console_log_formatter_1.sectionSeparator)(),
                 this.baselineDetails(baselineInfo),
+                (0, console_log_formatter_1.sectionSeparator)(),
+                (0, console_log_formatter_1.sectionSeparator)(),
                 this.downloadArtifactsWithLink(combinedReportResult, baselineInfo.baselineEvaluation),
+                (0, console_log_formatter_1.sectionSeparator)(),
+                (0, console_log_formatter_1.sectionSeparator)(),
                 (0, console_log_formatter_1.footerSeparator)(),
                 (0, console_log_formatter_1.sectionSeparator)(),
                 'Scan summary',
@@ -72624,24 +72628,12 @@ let ResultConsoleLogBuilder = class ResultConsoleLogBuilder {
         return (0, console_log_formatter_1.listItem)(`Download the ${artifactName} to view the detailed results of these checks`);
     }
     downloadArtifactsWithLink(combinedReportResult, baselineEvaluation) {
-        const artifactsUrl = this.artifactsInfoProvider.getArtifactsUrl();
-        let lines = [];
-        if (artifactsUrl === undefined) {
-            return lines.join('');
-        }
-        const artifactsLink = (0, console_log_formatter_1.link)(artifactsUrl, 'run artifacts');
+        const artifactsLink = (0, console_log_formatter_1.link)(this.artifactsInfoProvider.getArtifactsUrl(), 'run artifacts');
         let details = 'all failures and scan details';
         if (!this.baselineHasFailures(baselineEvaluation) && !this.hasFailures(combinedReportResult, baselineEvaluation)) {
             details = 'scan details';
         }
-        lines = [
-            (0, console_log_formatter_1.sectionSeparator)(),
-            (0, console_log_formatter_1.sectionSeparator)(),
-            `See ${details} by downloading the report from ${artifactsLink}`,
-            (0, console_log_formatter_1.sectionSeparator)(),
-            (0, console_log_formatter_1.sectionSeparator)(),
-        ];
-        return lines.join('');
+        return `See ${details} by downloading the report from ${artifactsLink}`;
     }
 };
 ResultConsoleLogBuilder = __decorate([
@@ -73563,7 +73555,11 @@ let ResultMarkdownBuilder = class ResultMarkdownBuilder {
                 this.failureDetailsBaseline(combinedReportResult, baselineInfo),
                 (0, markdown_formatter_1.sectionSeparator)(),
                 this.baselineDetails(baselineInfo),
+                (0, markdown_formatter_1.sectionSeparator)(),
+                (0, markdown_formatter_1.sectionSeparator)(),
                 this.downloadArtifactsWithLink(combinedReportResult, baselineInfo.baselineEvaluation),
+                (0, markdown_formatter_1.sectionSeparator)(),
+                (0, markdown_formatter_1.sectionSeparator)(),
                 (0, markdown_formatter_1.footerSeparator)(),
                 (0, markdown_formatter_1.sectionSeparator)(),
                 (0, markdown_formatter_1.heading)('Scan summary', 4),
@@ -73605,24 +73601,12 @@ let ResultMarkdownBuilder = class ResultMarkdownBuilder {
         return (0, markdown_formatter_1.listItem)(`Download the ${(0, markdown_formatter_1.bold)(artifactName)} to view the detailed results of these checks`);
     }
     downloadArtifactsWithLink(combinedReportResult, baselineEvaluation) {
-        const artifactsUrl = this.artifactsInfoProvider.getArtifactsUrl();
-        let lines = [];
-        if (artifactsUrl === undefined) {
-            return lines.join('');
-        }
-        const artifactsLink = (0, markdown_formatter_1.link)(artifactsUrl, 'run artifacts');
+        const artifactsLink = (0, markdown_formatter_1.link)(this.artifactsInfoProvider.getArtifactsUrl(), 'run artifacts');
         let details = 'all failures and scan details';
         if (!this.baselineHasFailures(baselineEvaluation) && !this.hasFailures(combinedReportResult, baselineEvaluation)) {
             details = 'scan details';
         }
-        lines = [
-            (0, markdown_formatter_1.sectionSeparator)(),
-            (0, markdown_formatter_1.sectionSeparator)(),
-            `See ${details} by downloading the report from ${artifactsLink}`,
-            (0, markdown_formatter_1.sectionSeparator)(),
-            (0, markdown_formatter_1.sectionSeparator)(),
-        ];
-        return lines.join('');
+        return `See ${details} by downloading the report from ${artifactsLink}`;
     }
 };
 ResultMarkdownBuilder = __decorate([
