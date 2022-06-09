@@ -71522,6 +71522,13 @@ let CheckRunCreator = class CheckRunCreator extends shared_1.ProgressReporter {
                         : this.githubObj.context.payload.pull_request.head.sha,
                 });
             }));
+            const test = yield this.invoke(() => __awaiter(this, void 0, void 0, function* () {
+                yield this.octokit.request('GET /repos/{owner}/{repo}/actions/artifacts', {
+                    owner: this.githubObj.context.repo.owner,
+                    repo: this.githubObj.context.repo.repo,
+                });
+            }));
+            console.log(test);
             this.a11yCheck = response === null || response === void 0 ? void 0 : response.data;
         });
     }
