@@ -72137,54 +72137,54 @@ let GHTaskConfig = class GHTaskConfig extends shared_1.TaskConfig {
     }
     getReportOutDir() {
         // Relying on action.yml to make this required
-        return this.getOptionalPathInput('output-dir');
+        return this.getOptionalPathInput('outputDir');
     }
     getStaticSiteDir() {
-        return this.getOptionalPathInput('site-dir');
+        return this.getOptionalPathInput('staticSiteDir');
     }
     getStaticSiteUrlRelativePath() {
-        return this.getOptionalStringInput('scan-url-relative-path');
+        return this.getOptionalStringInput('staticSiteUrlRelativePath');
     }
     getToken() {
         // Relying on action.yml to make this required
-        return this.getOptionalStringInput('repo-token');
+        return this.getOptionalStringInput('repoToken');
     }
     getChromePath() {
         var _a;
-        return (_a = this.getOptionalPathInput('chrome-path')) !== null && _a !== void 0 ? _a : this.processObj.env.CHROME_BIN;
+        return (_a = this.getOptionalPathInput('chromePath')) !== null && _a !== void 0 ? _a : this.processObj.env.CHROME_BIN;
     }
     getUrl() {
         return this.getOptionalStringInput('url');
     }
     getMaxUrls() {
         // Relying on action.yml to provide a default if necessary
-        return this.getOptionalIntInput('max-urls');
+        return this.getOptionalIntInput('maxUrls');
     }
     getDiscoveryPatterns() {
-        return this.getOptionalStringInput('discovery-patterns');
+        return this.getOptionalStringInput('discoveryPatterns');
     }
     getInputFile() {
-        return this.getOptionalPathInput('input-file');
+        return this.getOptionalPathInput('inputFile');
     }
     getInputUrls() {
-        return this.getOptionalStringInput('input-urls');
+        return this.getOptionalStringInput('inputUrls');
     }
     getScanTimeout() {
         // Relying on action.yml to provide a default if necessary
-        return this.getOptionalIntInput('scan-timeout');
+        return this.getOptionalIntInput('scanTimeout');
     }
     getStaticSitePort() {
-        return this.getOptionalIntInput('localhost-port');
+        return this.getOptionalIntInput('staticSitePort');
     }
     getRunId() {
         return parseInt(this.processObj.env.GITHUB_RUN_ID, 10);
     }
     getSingleWorker() {
-        const value = this.actionCoreObj.getInput('single-worker');
+        const value = this.actionCoreObj.getInput('singleWorker');
         return (0, lodash_1.isEmpty)(value) || value.toLowerCase().trim() !== 'false' ? true : false;
     }
     getBaselineFile() {
-        return this.getOptionalPathInput('baseline-file');
+        return this.getOptionalPathInput('baselineFile');
     }
     getHostingMode() {
         return this.getOptionalStringInput('hosting-mode');
@@ -72192,10 +72192,10 @@ let GHTaskConfig = class GHTaskConfig extends shared_1.TaskConfig {
     getInputName(key) {
         const keyToName = {
             HostingMode: 'hosting-mode',
-            StaticSiteDir: 'site-dir',
-            StaticSiteUrlRelativePath: 'scan-url-relative-path',
+            StaticSiteDir: 'staticSiteDir',
+            StaticSiteUrlRelativePath: 'staticSiteUrlRelativePath',
             Url: 'url',
-            StaticSitePort: 'localhost-port',
+            StaticSitePort: 'staticSitePort',
         };
         return keyToName[key];
     }
