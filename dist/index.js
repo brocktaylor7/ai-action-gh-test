@@ -72140,14 +72140,14 @@ let GHTaskConfig = class GHTaskConfig extends shared_1.TaskConfig {
         return this.getOptionalPathInput('outputDir');
     }
     getStaticSiteDir() {
-        return this.getOptionalPathInput('staticSiteDir');
+        return this.getOptionalPathInput('staticsitedir');
     }
     getStaticSiteUrlRelativePath() {
         return this.getOptionalStringInput('staticSiteUrlRelativePath');
     }
     getToken() {
         // Relying on action.yml to make this required
-        return this.getOptionalStringInput('repoToken');
+        return this.getOptionalStringInput('repotoken');
     }
     getChromePath() {
         var _a;
@@ -72192,7 +72192,7 @@ let GHTaskConfig = class GHTaskConfig extends shared_1.TaskConfig {
     getInputName(key) {
         const keyToName = {
             HostingMode: 'hosting-mode',
-            StaticSiteDir: 'staticSiteDir',
+            StaticSiteDir: 'staticsitedir',
             StaticSiteUrlRelativePath: 'staticSiteUrlRelativePath',
             Url: 'url',
             StaticSitePort: 'staticSitePort',
