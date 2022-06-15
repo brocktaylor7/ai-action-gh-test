@@ -72140,7 +72140,7 @@ let GHTaskConfig = class GHTaskConfig extends shared_1.TaskConfig {
         return this.getOptionalPathInput('outputDir');
     }
     getStaticSiteDir() {
-        return this.getOptionalPathInput('staticSiteDir');
+        return this.getOptionalPathInput('staticsitedir');
     }
     getStaticSiteUrlRelativePath() {
         return this.getOptionalStringInput('staticSiteUrlRelativePath');
@@ -72187,11 +72187,11 @@ let GHTaskConfig = class GHTaskConfig extends shared_1.TaskConfig {
         return this.getOptionalPathInput('baselineFile');
     }
     getHostingMode() {
-        return this.getOptionalStringInput('hostingMode');
+        return this.getOptionalStringInput('hostingmode');
     }
     getInputName(key) {
         const keyToName = {
-            HostingMode: 'hostingMode',
+            HostingMode: 'hostingmode',
             StaticSiteDir: 'staticSiteDir',
             StaticSiteUrlRelativePath: 'staticSiteUrlRelativePath',
             Url: 'url',
