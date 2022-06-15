@@ -72187,11 +72187,11 @@ let GHTaskConfig = class GHTaskConfig extends shared_1.TaskConfig {
         return this.getOptionalPathInput('baselineFile');
     }
     getHostingMode() {
-        return this.getOptionalStringInput('hosting-mode');
+        return this.getOptionalStringInput('hostingMode');
     }
     getInputName(key) {
         const keyToName = {
-            HostingMode: 'hosting-mode',
+            HostingMode: 'hostingMode',
             StaticSiteDir: 'staticSiteDir',
             StaticSiteUrlRelativePath: 'staticSiteUrlRelativePath',
             Url: 'url',
