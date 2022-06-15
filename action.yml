@@ -8,11 +8,11 @@ inputs:
         description: 'Folder containing the scan report.'
         default: '_accessibility-reports'
         required: true
-    site-dir:
+    static-site-dir:
         description: 'Folder containing website content.'
         default: ${{ github.workspace }}
         required: true
-    scan-url-relative-path:
+    static-site-url-relative-path:
         description: 'Relative path to directory used to construct base scan url. e.g. / on Ubuntu and // on Windows'
         required: true
         default: '/'
@@ -77,8 +77,8 @@ runs:
           shell: bash
           env:
               INPUT_OUTPUT-DIR: ${{ inputs.output-dir }}
-              INPUT_SITE-DIR: ${{ inputs.site-dir }}
-              INPUT_SCAN-URL-RELATIVE-PATH: ${{ inputs.scan-url-relative-path }}
+              INPUT_SITE-DIR: ${{ inputs.static-site-dir }}
+              INPUT_SCAN-URL-RELATIVE-PATH: ${{ inputs.static-site-url-relative-path }}
               INPUT_CHROME-PATH: ${{ inputs.chrome-path }}
               INPUT_REPO-TOKEN: ${{ inputs.repo-token }}
               INPUT_URL: ${{ inputs.url }}
