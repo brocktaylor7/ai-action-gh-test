@@ -72192,7 +72192,7 @@ let GHTaskConfig = class GHTaskConfig extends shared_1.TaskConfig {
     getInputName(key) {
         const keyToName = {
             HostingMode: 'hostingmode',
-            StaticSiteDir: 'staticSiteDir',
+            StaticSiteDir: 'staticsitedir',
             StaticSiteUrlRelativePath: 'staticSiteUrlRelativePath',
             Url: 'url',
             StaticSitePort: 'staticSitePort',
