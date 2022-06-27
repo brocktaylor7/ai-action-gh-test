@@ -92,3 +92,4 @@ runs:
               INPUT_INPUT-URLS: ${{ inputs.input-urls }}
               INPUT_STATIC-SITE-PORT: ${{ inputs.static-site-port }}
               INPUT_SCAN-TIMEOUT: ${{ inputs.scan-timeout }}
+              INPUT_FAIL-ON-ACCESSIBILITY-ERROR: ${{ inputs.fail-on-accessibility-error }}
