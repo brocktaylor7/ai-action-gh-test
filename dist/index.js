@@ -72169,6 +72169,9 @@ let GHTaskConfig = class GHTaskConfig extends shared_1.TaskConfig {
         return url;
     }
     getFailOnAccessibilityError() {
+        console.log('getFailOnAccessibilityError');
+        console.log(this.actionCoreObj.getInput('fail-on-accessibility-error'));
+        console.log(this.actionCoreObj.getBooleanInput('fail-on-accessibility-error'));
         return this.actionCoreObj.getBooleanInput('fail-on-accessibility-error');
     }
     getAbsolutePath(path) {
