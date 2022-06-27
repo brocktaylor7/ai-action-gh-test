@@ -71778,18 +71778,21 @@ const gh_ioc_types_1 = __webpack_require__(/*! ./gh-ioc-types */ "./src/ioc/gh-i
 const gh_artifacts_info_provider_1 = __webpack_require__(/*! ../gh-artifacts-info-provider */ "./src/gh-artifacts-info-provider.ts");
 const console_comment_creator_1 = __webpack_require__(/*! ../console/console-comment-creator */ "./src/console/console-comment-creator.ts");
 const job_summary_creator_1 = __webpack_require__(/*! ../job-summary/job-summary-creator */ "./src/job-summary/job-summary-creator.ts");
+const gh_workflow_enforcer_1 = __webpack_require__(/*! ../workflow-enforcer/gh-workflow-enforcer */ "./src/workflow-enforcer/gh-workflow-enforcer.ts");
 function setupIocContainer(container = new inversify.Container({ autoBindInjectable: true })) {
     container = (0, shared_1.setupSharedIocContainer)(container);
     container.bind(gh_ioc_types_1.GitHubIocTypes.Github).toConstantValue(github);
     container.bind(shared_1.iocTypes.TaskConfig).to(gh_task_config_1.GHTaskConfig).inSingletonScope();
     container.bind(job_summary_creator_1.JobSummaryCreator).toSelf().inSingletonScope();
     container.bind(console_comment_creator_1.ConsoleCommentCreator).toSelf().inSingletonScope();
+    container.bind(gh_workflow_enforcer_1.GhWorkflowEnforcer).toSelf().inSingletonScope();
     container
         .bind(shared_1.iocTypes.ProgressReporters)
         .toDynamicValue((context) => {
         const consoleCommentCreator = context.container.get(console_comment_creator_1.ConsoleCommentCreator);
         const jobSummaryCreator = context.container.get(job_summary_creator_1.JobSummaryCreator);
-        return [consoleCommentCreator, jobSummaryCreator];
+        const ghWorkflowEnforcer = context.container.get(gh_workflow_enforcer_1.GhWorkflowEnforcer);
+        return [consoleCommentCreator, jobSummaryCreator, ghWorkflowEnforcer];
     })
         .inSingletonScope();
     container
@@ -72165,6 +72168,9 @@ let GHTaskConfig = class GHTaskConfig extends shared_1.TaskConfig {
         const url = 'https://github.com/microsoft/accessibility-insights-action/blob/main/docs/gh-action-usage.md';
         return url;
     }
+    getFailOnAccessibilityError() {
+        return this.actionCoreObj.getBooleanInput('fail-on-accessibility-error');
+    }
     getAbsolutePath(path) {
         var _a;
         if ((0, lodash_1.isEmpty)(path)) {
@@ -72192,6 +72198,94 @@ GHTaskConfig = __decorate([
     __metadata("design:paramtypes", [Object, Object, Object])
 ], GHTaskConfig);
 exports.GHTaskConfig = GHTaskConfig;
+
+
+/***/ }),
+
+/***/ "./src/workflow-enforcer/gh-workflow-enforcer.ts":
+/*!*******************************************************!*\
+  !*** ./src/workflow-enforcer/gh-workflow-enforcer.ts ***!
+  \*******************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var _a, _b;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.GhWorkflowEnforcer = void 0;
+const inversify_1 = __webpack_require__(/*! inversify */ "../../node_modules/inversify/lib/inversify.js");
+const shared_1 = __webpack_require__(/*! @accessibility-insights-action/shared */ "../shared/dist/index.js");
+const gh_task_config_1 = __webpack_require__(/*! ../task-config/gh-task-config */ "./src/task-config/gh-task-config.ts");
+let GhWorkflowEnforcer = class GhWorkflowEnforcer extends shared_1.ProgressReporter {
+    constructor(ghTaskConfig, logger) {
+        super();
+        this.ghTaskConfig = ghTaskConfig;
+        this.logger = logger;
+        this.scanSucceeded = true;
+    }
+    start() {
+        return __awaiter(this, void 0, void 0, function* () {
+            // We don't do anything for workflow enforcement
+        });
+    }
+    // eslint-disable-next-line @typescript-eslint/require-await
+    completeRun(combinedReportResult) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.failIfAccessibilityErrorExists(combinedReportResult);
+        });
+    }
+    // eslint-disable-next-line @typescript-eslint/require-await
+    failRun() {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.scanSucceeded = false;
+        });
+    }
+    didScanSucceed() {
+        return Promise.resolve(this.scanSucceeded);
+    }
+    failIfAccessibilityErrorExists(combinedReportResult) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (this.ghTaskConfig.getFailOnAccessibilityError() && combinedReportResult.results.urlResults.failedUrls > 0) {
+                this.logger.logError('Accessibility error(s) were found');
+                this.logger.logInfo([
+                    'To prevent accessibility errors from failing your build, you can:',
+                    '* Set the fail-on-accessibility-error input to false to avoid failing for all issues',
+                ].join('\n'));
+                yield this.failRun();
+            }
+        });
+    }
+};
+GhWorkflowEnforcer = __decorate([
+    (0, inversify_1.injectable)(),
+    __param(0, (0, inversify_1.inject)(shared_1.iocTypes.TaskConfig)),
+    __param(1, (0, inversify_1.inject)(shared_1.Logger)),
+    __metadata("design:paramtypes", [typeof (_a = typeof gh_task_config_1.GHTaskConfig !== "undefined" && gh_task_config_1.GHTaskConfig) === "function" ? _a : Object, typeof (_b = typeof shared_1.Logger !== "undefined" && shared_1.Logger) === "function" ? _b : Object])
+], GhWorkflowEnforcer);
+exports.GhWorkflowEnforcer = GhWorkflowEnforcer;
 
 
 /***/ }),
