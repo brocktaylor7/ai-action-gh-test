@@ -3085,47 +3085,6 @@ exports.paginatingEndpoints = paginatingEndpoints;
 
 /***/ }),
 
-/***/ "../../node_modules/@octokit/plugin-request-log/dist-node/index.js":
-/*!*************************************************************************!*\
-  !*** ../../node_modules/@octokit/plugin-request-log/dist-node/index.js ***!
-  \*************************************************************************/
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-
-const VERSION = "1.0.4";
-
-/**
- * @param octokit Octokit instance
- * @param options Options passed to Octokit constructor
- */
-
-function requestLog(octokit) {
-  octokit.hook.wrap("request", (request, options) => {
-    octokit.log.debug("request", options);
-    const start = Date.now();
-    const requestOptions = octokit.request.endpoint.parse(options);
-    const path = requestOptions.url.replace(options.baseUrl, "");
-    return request(options).then(response => {
-      octokit.log.info(`${requestOptions.method} ${path} - ${response.status} in ${Date.now() - start}ms`);
-      return response;
-    }).catch(error => {
-      octokit.log.info(`${requestOptions.method} ${path} - ${error.status} in ${Date.now() - start}ms`);
-      throw error;
-    });
-  });
-}
-requestLog.VERSION = VERSION;
-
-exports.requestLog = requestLog;
-//# sourceMappingURL=index.js.map
-
-
-/***/ }),
-
 /***/ "../../node_modules/@octokit/plugin-rest-endpoint-methods/dist-node/index.js":
 /*!***********************************************************************************!*\
   !*** ../../node_modules/@octokit/plugin-rest-endpoint-methods/dist-node/index.js ***!
@@ -4496,34 +4455,6 @@ class RequestError extends Error {
 }
 
 exports.RequestError = RequestError;
-//# sourceMappingURL=index.js.map
-
-
-/***/ }),
-
-/***/ "../../node_modules/@octokit/rest/dist-node/index.js":
-/*!***********************************************************!*\
-  !*** ../../node_modules/@octokit/rest/dist-node/index.js ***!
-  \***********************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-
-var core = __webpack_require__(/*! @octokit/core */ "../../node_modules/@octokit/core/dist-node/index.js");
-var pluginRequestLog = __webpack_require__(/*! @octokit/plugin-request-log */ "../../node_modules/@octokit/plugin-request-log/dist-node/index.js");
-var pluginPaginateRest = __webpack_require__(/*! @octokit/plugin-paginate-rest */ "../../node_modules/@octokit/plugin-paginate-rest/dist-node/index.js");
-var pluginRestEndpointMethods = __webpack_require__(/*! @octokit/plugin-rest-endpoint-methods */ "../../node_modules/@octokit/plugin-rest-endpoint-methods/dist-node/index.js");
-
-const VERSION = "18.12.0";
-
-const Octokit = core.Octokit.plugin(pluginRequestLog.requestLog, pluginRestEndpointMethods.legacyRestEndpointMethods, pluginPaginateRest.paginateRest).defaults({
-  userAgent: `octokit-rest.js/${VERSION}`
-});
-
-exports.Octokit = Octokit;
 //# sourceMappingURL=index.js.map
 
 
@@ -71770,7 +71701,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.setupIocContainer = void 0;
 const github = __importStar(__webpack_require__(/*! @actions/github */ "../../node_modules/@actions/github/lib/github.js"));
-const rest_1 = __webpack_require__(/*! @octokit/rest */ "../../node_modules/@octokit/rest/dist-node/index.js");
 const inversify = __importStar(__webpack_require__(/*! inversify */ "../../node_modules/inversify/lib/inversify.js"));
 const shared_1 = __webpack_require__(/*! @accessibility-insights-action/shared */ "../shared/dist/index.js");
 const gh_task_config_1 = __webpack_require__(/*! ../task-config/gh-task-config */ "./src/task-config/gh-task-config.ts");
@@ -71785,21 +71715,14 @@ function setupIocContainer(container = new inversify.Container({ autoBindInjecta
     container.bind(shared_1.iocTypes.TaskConfig).to(gh_task_config_1.GHTaskConfig).inSingletonScope();
     container.bind(job_summary_creator_1.JobSummaryCreator).toSelf().inSingletonScope();
     container.bind(console_comment_creator_1.ConsoleCommentCreator).toSelf().inSingletonScope();
-    container.bind(gh_workflow_enforcer_1.GhWorkflowEnforcer).toSelf().inSingletonScope();
+    container.bind(gh_workflow_enforcer_1.GHWorkflowEnforcer).toSelf().inSingletonScope();
     container
         .bind(shared_1.iocTypes.ProgressReporters)
         .toDynamicValue((context) => {
         const consoleCommentCreator = context.container.get(console_comment_creator_1.ConsoleCommentCreator);
         const jobSummaryCreator = context.container.get(job_summary_creator_1.JobSummaryCreator);
-        const ghWorkflowEnforcer = context.container.get(gh_workflow_enforcer_1.GhWorkflowEnforcer);
+        const ghWorkflowEnforcer = context.container.get(gh_workflow_enforcer_1.GHWorkflowEnforcer);
         return [consoleCommentCreator, jobSummaryCreator, ghWorkflowEnforcer];
-    })
-        .inSingletonScope();
-    container
-        .bind(rest_1.Octokit)
-        .toDynamicValue((context) => {
-        const taskConfig = context.container.get(gh_task_config_1.GHTaskConfig);
-        return new rest_1.Octokit({ auth: taskConfig.getToken() });
     })
         .inSingletonScope();
     container.bind(shared_1.iocTypes.ArtifactsInfoProvider).to(gh_artifacts_info_provider_1.GitHubArtifactsInfoProvider).inSingletonScope();
@@ -72105,10 +72028,6 @@ let GHTaskConfig = class GHTaskConfig extends shared_1.TaskConfig {
     getStaticSiteUrlRelativePath() {
         return this.getOptionalStringInput('static-site-url-relative-path');
     }
-    getToken() {
-        // Relying on action.yml to make this required
-        return this.getOptionalStringInput('repo-token');
-    }
     getChromePath() {
         var _a;
         return (_a = this.getOptionalPathInput('chrome-path')) !== null && _a !== void 0 ? _a : this.processObj.env.CHROME_BIN;
@@ -72236,11 +72155,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 var _a, _b;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.GhWorkflowEnforcer = void 0;
+exports.GHWorkflowEnforcer = void 0;
 const inversify_1 = __webpack_require__(/*! inversify */ "../../node_modules/inversify/lib/inversify.js");
 const shared_1 = __webpack_require__(/*! @accessibility-insights-action/shared */ "../shared/dist/index.js");
 const gh_task_config_1 = __webpack_require__(/*! ../task-config/gh-task-config */ "./src/task-config/gh-task-config.ts");
-let GhWorkflowEnforcer = class GhWorkflowEnforcer extends shared_1.ProgressReporter {
+let GHWorkflowEnforcer = class GHWorkflowEnforcer extends shared_1.ProgressReporter {
     constructor(ghTaskConfig, logger) {
         super();
         this.ghTaskConfig = ghTaskConfig;
@@ -72280,13 +72199,13 @@ let GhWorkflowEnforcer = class GhWorkflowEnforcer extends shared_1.ProgressRepor
         });
     }
 };
-GhWorkflowEnforcer = __decorate([
+GHWorkflowEnforcer = __decorate([
     (0, inversify_1.injectable)(),
     __param(0, (0, inversify_1.inject)(shared_1.iocTypes.TaskConfig)),
     __param(1, (0, inversify_1.inject)(shared_1.Logger)),
     __metadata("design:paramtypes", [typeof (_a = typeof gh_task_config_1.GHTaskConfig !== "undefined" && gh_task_config_1.GHTaskConfig) === "function" ? _a : Object, typeof (_b = typeof shared_1.Logger !== "undefined" && shared_1.Logger) === "function" ? _b : Object])
-], GhWorkflowEnforcer);
-exports.GhWorkflowEnforcer = GhWorkflowEnforcer;
+], GHWorkflowEnforcer);
+exports.GHWorkflowEnforcer = GHWorkflowEnforcer;
 
 
 /***/ }),
