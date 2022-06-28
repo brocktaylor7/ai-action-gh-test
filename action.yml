@@ -55,5 +55,4 @@ inputs:
         default: true
 runs:
     using: 'node16'
-    pre: 'dist/setup.js'
     main: 'dist/index.js'
