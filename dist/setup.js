@@ -1211,7 +1211,10 @@ __webpack_require__(/*! reflect-metadata */ "../../node_modules/reflect-metadata
 __webpack_require__(/*! ./module-name-mapper */ "./src/module-name-mapper.ts");
 const childProcess = __importStar(__webpack_require__(/*! child_process */ "child_process"));
 function main() {
-    childProcess.execSync('yarn install --frozen-lockfile --production --ignore-optional --ignore-engines');
+    childProcess.spawnSync('npm', ['install', '-g', 'yarn'], { stdio: 'inherit' });
+    childProcess.spawnSync('yarn', ['install', '--frozen-lockfile', '--production', '--ignore-optional', '--ignore-engines'], {
+        stdio: 'inherit',
+    });
 }
 main();
 
