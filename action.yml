@@ -59,6 +59,7 @@ runs:
         - name: echo node version
           run: |
               echo "Node version: $(node --version)"
+          shell: bash
         - name: Install npm packages
           run: |
               echo 'Installing npm packages...'
