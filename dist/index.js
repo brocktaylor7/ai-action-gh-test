@@ -71688,29 +71688,6 @@ exports.GitHubArtifactsInfoProvider = GitHubArtifactsInfoProvider;
 
 "use strict";
 
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -71725,12 +71702,10 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 // Licensed under the MIT License.
 __webpack_require__(/*! reflect-metadata */ "../../node_modules/reflect-metadata/Reflect.js");
 __webpack_require__(/*! ./module-name-mapper */ "./src/module-name-mapper.ts");
-const setup = __importStar(__webpack_require__(/*! ./setup */ "./src/setup.ts"));
 const shared_1 = __webpack_require__(/*! @accessibility-insights-action/shared */ "../shared/dist/index.js");
 const setup_ioc_container_1 = __webpack_require__(/*! ./ioc/setup-ioc-container */ "./src/ioc/setup-ioc-container.ts");
 const gh_stdout_transformer_1 = __webpack_require__(/*! ./output-hooks/gh-stdout-transformer */ "./src/output-hooks/gh-stdout-transformer.ts");
 (() => __awaiter(void 0, void 0, void 0, function* () {
-    setup.installRuntimeDependencies();
     (0, shared_1.hookStderr)();
     (0, shared_1.hookStdout)(gh_stdout_transformer_1.ghStdoutTransformer);
     const container = (0, setup_ioc_container_1.setupIocContainer)();
@@ -72042,57 +72017,6 @@ function replaceFirstMatchWithEndgroupPrefix(input, regex) {
 function prependDebugPrefix(input) {
     return `${debugPrefix}${input}`;
 }
-
-
-/***/ }),
-
-/***/ "./src/setup.ts":
-/*!**********************!*\
-  !*** ./src/setup.ts ***!
-  \**********************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.installRuntimeDependencies = void 0;
-// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT License.
-__webpack_require__(/*! reflect-metadata */ "../../node_modules/reflect-metadata/Reflect.js");
-__webpack_require__(/*! ./module-name-mapper */ "./src/module-name-mapper.ts");
-const childProcess = __importStar(__webpack_require__(/*! child_process */ "child_process"));
-function installRuntimeDependencies() {
-    childProcess.spawnSync('pwd', [], { stdio: 'inherit' });
-    childProcess.spawnSync('yarn', ['-v'], { stdio: 'inherit' });
-    // childProcess.spawnSync('npm', ['install', '-g', 'yarn'], { stdio: 'inherit' });
-    childProcess.spawnSync('yarn', ['install', '--frozen-lockfile', '--production', '--ignore-optional', '--ignore-engines'], {
-        stdio: 'inherit',
-    });
-}
-exports.installRuntimeDependencies = installRuntimeDependencies;
 
 
 /***/ }),
@@ -76045,17 +75969,6 @@ module.exports = require("async_hooks");
 
 "use strict";
 module.exports = require("buffer");
-
-/***/ }),
-
-/***/ "child_process":
-/*!********************************!*\
-  !*** external "child_process" ***!
-  \********************************/
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("child_process");
 
 /***/ }),
 
