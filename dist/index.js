@@ -71920,7 +71920,7 @@ moduleRef._resolveFilename = new Proxy(moduleRef._resolveFilename, {
 /*!***************************************************!*\
   !*** ./src/output-hooks/gh-stdout-transformer.ts ***!
   \***************************************************/
-/***/ ((__unused_webpack_module, exports) => {
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
@@ -71928,6 +71928,7 @@ moduleRef._resolveFilename = new Proxy(moduleRef._resolveFilename, {
 // Licensed under the MIT License.
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ghStdoutTransformer = void 0;
+const shared_1 = __webpack_require__(/*! @accessibility-insights-action/shared */ "../shared/dist/index.js");
 const debugPrefix = '::debug::';
 const regexTransformations = [
     {
@@ -71976,14 +71977,15 @@ const regexTransformations = [
         method: replaceFirstMatchWithDebugPrefix,
     },
 ];
-const ghStdoutTransformer = (rawData) => {
+const ghStdoutTransformer = (rawData, preprocessor = shared_1.stdoutPreprocessor) => {
+    const data = preprocessor(rawData);
     for (const startSubstitution of regexTransformations) {
-        const newData = regexTransformation(rawData, startSubstitution.regex, startSubstitution.method);
+        const newData = regexTransformation(data, startSubstitution.regex, startSubstitution.method);
         if (newData) {
             return newData;
         }
     }
-    return prependDebugPrefix(rawData);
+    return prependDebugPrefix(data);
 };
 exports.ghStdoutTransformer = ghStdoutTransformer;
 const regexTransformation = (input, regex, modifier) => {
@@ -73771,7 +73773,7 @@ exports.ExitCode = {
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.TempDirCreator = exports.InputValidator = exports.NullTelemetryClient = exports.ExitCode = exports.hookStderr = exports.hookStdout = exports.ArtifactsInfoProvider = exports.TaskConfig = exports.checkRunName = exports.checkRunDetailsTitle = exports.disclaimerText = exports.productTitle = exports.ReportConsoleLogConvertor = exports.ReportMarkdownConvertor = exports.ProgressReporter = exports.iocTypes = exports.Scanner = exports.RecordingTestLogger = exports.Logger = exports.setupSharedIocContainer = void 0;
+exports.TempDirCreator = exports.InputValidator = exports.NullTelemetryClient = exports.ExitCode = exports.stdoutPreprocessor = exports.hookStderr = exports.hookStdout = exports.ArtifactsInfoProvider = exports.TaskConfig = exports.checkRunName = exports.checkRunDetailsTitle = exports.disclaimerText = exports.productTitle = exports.ReportConsoleLogConvertor = exports.ReportMarkdownConvertor = exports.ProgressReporter = exports.iocTypes = exports.Scanner = exports.RecordingTestLogger = exports.Logger = exports.setupSharedIocContainer = void 0;
 var setup_ioc_container_1 = __webpack_require__(/*! ./ioc/setup-ioc-container */ "../shared/dist/ioc/setup-ioc-container.js");
 Object.defineProperty(exports, "setupSharedIocContainer", ({ enumerable: true, get: function () { return setup_ioc_container_1.setupSharedIocContainer; } }));
 var logger_1 = __webpack_require__(/*! ./logger/logger */ "../shared/dist/logger/logger.js");
@@ -73803,6 +73805,8 @@ var hook_stdout_1 = __webpack_require__(/*! ./output-hooks/hook-stdout */ "../sh
 Object.defineProperty(exports, "hookStdout", ({ enumerable: true, get: function () { return hook_stdout_1.hookStdout; } }));
 var hook_stderr_1 = __webpack_require__(/*! ./output-hooks/hook-stderr */ "../shared/dist/output-hooks/hook-stderr.js");
 Object.defineProperty(exports, "hookStderr", ({ enumerable: true, get: function () { return hook_stderr_1.hookStderr; } }));
+var stdout_preprocessor_1 = __webpack_require__(/*! ./output-hooks/stdout-preprocessor */ "../shared/dist/output-hooks/stdout-preprocessor.js");
+Object.defineProperty(exports, "stdoutPreprocessor", ({ enumerable: true, get: function () { return stdout_preprocessor_1.stdoutPreprocessor; } }));
 var exit_code_1 = __webpack_require__(/*! ./exit-code */ "../shared/dist/exit-code.js");
 Object.defineProperty(exports, "ExitCode", ({ enumerable: true, get: function () { return exit_code_1.ExitCode; } }));
 var null_telemetry_client_1 = __webpack_require__(/*! ./telemetry/null-telemetry-client */ "../shared/dist/telemetry/null-telemetry-client.js");
@@ -75057,6 +75061,26 @@ const stderrTransformer = (rawData) => {
 };
 exports.stderrTransformer = stderrTransformer;
 //# sourceMappingURL=stderr-transformer.js.map
+
+/***/ }),
+
+/***/ "../shared/dist/output-hooks/stdout-preprocessor.js":
+/*!**********************************************************!*\
+  !*** ../shared/dist/output-hooks/stdout-preprocessor.js ***!
+  \**********************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.stdoutPreprocessor = void 0;
+const stdoutPreprocessor = (rawData) => {
+    return rawData.replace('either rerun with --updateBaseline or ', '');
+};
+exports.stdoutPreprocessor = stdoutPreprocessor;
+//# sourceMappingURL=stdout-preprocessor.js.map
 
 /***/ }),
 
