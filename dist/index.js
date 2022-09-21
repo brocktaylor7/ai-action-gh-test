@@ -68515,6 +68515,7 @@ let GHWorkflowEnforcer = class GHWorkflowEnforcer extends shared_1.ProgressRepor
     completeRun(combinedReportResult, baselineEvaluation) {
         return __awaiter(this, void 0, void 0, function* () {
             const baselineFileInput = this.ghTaskConfig.getBaselineFile();
+            console.log('baselineFileInput', baselineFileInput);
             if (baselineFileInput != null) {
                 yield this.failIfBaselineNeedsUpdating(baselineFileInput, baselineEvaluation);
             }
