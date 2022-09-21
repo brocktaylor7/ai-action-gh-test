@@ -68515,7 +68515,6 @@ let GHWorkflowEnforcer = class GHWorkflowEnforcer extends shared_1.ProgressRepor
     completeRun(combinedReportResult, baselineEvaluation) {
         return __awaiter(this, void 0, void 0, function* () {
             const baselineFileInput = this.ghTaskConfig.getBaselineFile();
-            console.log('baselineFileInput', baselineFileInput);
             if (baselineFileInput != null) {
                 yield this.failIfBaselineNeedsUpdating(baselineFileInput, baselineEvaluation);
             }
@@ -68548,9 +68547,9 @@ let GHWorkflowEnforcer = class GHWorkflowEnforcer extends shared_1.ProgressRepor
     failIfBaselineNeedsUpdating(baselineFileInput, baselineEvaluation) {
         return __awaiter(this, void 0, void 0, function* () {
             if (baselineEvaluation === null || baselineEvaluation === void 0 ? void 0 : baselineEvaluation.suggestedBaselineUpdate) {
-                this.logger.logInfo(`${baselineFileInput} The baseline file does not match scan results test.`);
-                yield this.failRun();
+                this.logger.logInfo(`${baselineFileInput} The baseline file does not match scan results test. ${JSON.stringify(baselineEvaluation)}`);
             }
+            yield this.failRun();
         });
     }
 };
