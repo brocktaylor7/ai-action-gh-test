@@ -92,3 +92,4 @@ runs:
               INPUT_SCAN-TIMEOUT: ${{ inputs.scan-timeout }}
               INPUT_FAIL-ON-ACCESSIBILITY-ERROR: ${{ inputs.fail-on-accessibility-error }}
               INPUT_HOSTING-MODE: ${{ inputs.hosting-mode }}
+              INPUT_BASELINE-FILE: ${{ inputs.baseline-file }}
