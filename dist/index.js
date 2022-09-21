@@ -68548,7 +68548,7 @@ let GHWorkflowEnforcer = class GHWorkflowEnforcer extends shared_1.ProgressRepor
     failIfBaselineNeedsUpdating(baselineFileInput, baselineEvaluation) {
         return __awaiter(this, void 0, void 0, function* () {
             if (baselineEvaluation === null || baselineEvaluation === void 0 ? void 0 : baselineEvaluation.suggestedBaselineUpdate) {
-                this.logger.logInfo(`${baselineFileInput} The baseline file does not match scan results.`);
+                this.logger.logInfo(`${baselineFileInput} The baseline file does not match scan results test.`);
                 yield this.failRun();
             }
         });
