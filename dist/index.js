@@ -67883,14 +67883,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var _a, _b;
+var _a, _b, _c;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ConsoleCommentCreator = void 0;
 const inversify_1 = __webpack_require__(/*! inversify */ "../../node_modules/inversify/lib/inversify.js");
 const shared_1 = __webpack_require__(/*! @accessibility-insights-action/shared */ "../shared/dist/index.js");
+const gh_task_config_1 = __webpack_require__(/*! ../task-config/gh-task-config */ "./src/task-config/gh-task-config.ts");
 let ConsoleCommentCreator = class ConsoleCommentCreator extends shared_1.ProgressReporter {
-    constructor(reportConsoleLogConvertor, logger) {
+    constructor(taskConfig, reportConsoleLogConvertor, logger) {
         super();
+        this.taskConfig = taskConfig;
         this.reportConsoleLogConvertor = reportConsoleLogConvertor;
         this.logger = logger;
         this.scanSucceeded = true;
@@ -67900,12 +67902,20 @@ let ConsoleCommentCreator = class ConsoleCommentCreator extends shared_1.Progres
         this.logger.logDebug('console comment creator started');
         return Promise.resolve();
     }
-    completeRun(combinedReportResult) {
+    completeRun(combinedReportResult, baselineEvaluation) {
         return __awaiter(this, void 0, void 0, function* () {
-            const reportConsoleLogOutput = this.reportConsoleLogConvertor.convert(combinedReportResult);
+            const baselineInfo = this.getBaselineInfo(baselineEvaluation);
+            const reportConsoleLogOutput = this.reportConsoleLogConvertor.convert(combinedReportResult, undefined, baselineInfo);
             this.logger.logInfo(reportConsoleLogOutput);
             return Promise.resolve();
         });
+    }
+    getBaselineInfo(baselineEvaluation) {
+        const baselineFileName = this.taskConfig.getBaselineFile();
+        if (!baselineFileName) {
+            return {};
+        }
+        return { baselineFileName, baselineEvaluation };
     }
     // eslint-disable-next-line @typescript-eslint/require-await
     failRun() {
@@ -67919,9 +67929,10 @@ let ConsoleCommentCreator = class ConsoleCommentCreator extends shared_1.Progres
 };
 ConsoleCommentCreator = __decorate([
     (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(shared_1.ReportConsoleLogConvertor)),
-    __param(1, (0, inversify_1.inject)(shared_1.Logger)),
-    __metadata("design:paramtypes", [typeof (_a = typeof shared_1.ReportConsoleLogConvertor !== "undefined" && shared_1.ReportConsoleLogConvertor) === "function" ? _a : Object, typeof (_b = typeof shared_1.Logger !== "undefined" && shared_1.Logger) === "function" ? _b : Object])
+    __param(0, (0, inversify_1.inject)(shared_1.iocTypes.TaskConfig)),
+    __param(1, (0, inversify_1.inject)(shared_1.ReportConsoleLogConvertor)),
+    __param(2, (0, inversify_1.inject)(shared_1.Logger)),
+    __metadata("design:paramtypes", [typeof (_a = typeof gh_task_config_1.GHTaskConfig !== "undefined" && gh_task_config_1.GHTaskConfig) === "function" ? _a : Object, typeof (_b = typeof shared_1.ReportConsoleLogConvertor !== "undefined" && shared_1.ReportConsoleLogConvertor) === "function" ? _b : Object, typeof (_c = typeof shared_1.Logger !== "undefined" && shared_1.Logger) === "function" ? _c : Object])
 ], ConsoleCommentCreator);
 exports.ConsoleCommentCreator = ConsoleCommentCreator;
 
