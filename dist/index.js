@@ -67998,10 +67998,9 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 __webpack_require__(/*! reflect-metadata */ "../../node_modules/reflect-metadata/Reflect.js");
 const shared_1 = __webpack_require__(/*! @accessibility-insights-action/shared */ "../shared/dist/index.js");
 const setup_ioc_container_1 = __webpack_require__(/*! ./ioc/setup-ioc-container */ "./src/ioc/setup-ioc-container.ts");
-const gh_stdout_transformer_1 = __webpack_require__(/*! ./output-hooks/gh-stdout-transformer */ "./src/output-hooks/gh-stdout-transformer.ts");
 (() => __awaiter(void 0, void 0, void 0, function* () {
     (0, shared_1.hookStderr)();
-    (0, shared_1.hookStdout)(gh_stdout_transformer_1.ghStdoutTransformer);
+    // hookStdout(ghStdoutTransformer);
     const container = (0, setup_ioc_container_1.setupIocContainer)();
     const logger = container.get(shared_1.Logger);
     yield logger.setup();
@@ -68175,113 +68174,6 @@ JobSummaryCreator = __decorate([
     __metadata("design:paramtypes", [typeof (_a = typeof gh_task_config_1.GHTaskConfig !== "undefined" && gh_task_config_1.GHTaskConfig) === "function" ? _a : Object, typeof (_b = typeof shared_1.ReportMarkdownConvertor !== "undefined" && shared_1.ReportMarkdownConvertor) === "function" ? _b : Object, typeof (_c = typeof shared_1.Logger !== "undefined" && shared_1.Logger) === "function" ? _c : Object])
 ], JobSummaryCreator);
 exports.JobSummaryCreator = JobSummaryCreator;
-
-
-/***/ }),
-
-/***/ "./src/output-hooks/gh-stdout-transformer.ts":
-/*!***************************************************!*\
-  !*** ./src/output-hooks/gh-stdout-transformer.ts ***!
-  \***************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT License.
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.ghStdoutTransformer = void 0;
-const shared_1 = __webpack_require__(/*! @accessibility-insights-action/shared */ "../shared/dist/index.js");
-const debugPrefix = '::debug::';
-const regexTransformations = [
-    {
-        regex: new RegExp('^Processing page .*'),
-        method: useUnmodifiedString,
-    },
-    {
-        regex: new RegExp('^Discovered \\d* links on page '),
-        method: useUnmodifiedString,
-    },
-    {
-        regex: new RegExp('^Found \\d* accessibility issues on page '),
-        method: useUnmodifiedString,
-    },
-    {
-        regex: new RegExp('^\\[error\\]'),
-        method: replaceFirstMatchWithErrorPrefix,
-    },
-    {
-        regex: new RegExp('^\\[info\\]'),
-        method: removeFirstMatch,
-    },
-    {
-        regex: new RegExp('^\\[warning\\]'),
-        method: replaceFirstMatchWithWarningPrefix,
-    },
-    {
-        regex: new RegExp('^\\[verbose\\]'),
-        method: replaceFirstMatchWithDebugPrefix,
-    },
-    {
-        regex: new RegExp('^\\[debug\\]'),
-        method: replaceFirstMatchWithDebugPrefix,
-    },
-    {
-        regex: new RegExp('^\\[group\\]'),
-        method: replaceFirstMatchWithGroupPrefix,
-    },
-    {
-        regex: new RegExp('^\\[endgroup\\]'),
-        method: replaceFirstMatchWithEndgroupPrefix,
-    },
-    {
-        // eslint-disable-next-line no-control-regex
-        regex: new RegExp('^\u001B\\[32mINFO\u001b\\[39m '),
-        method: replaceFirstMatchWithDebugPrefix,
-    },
-];
-const ghStdoutTransformer = (rawData, preprocessor = shared_1.stdoutPreprocessor) => {
-    const data = preprocessor(rawData);
-    for (const startSubstitution of regexTransformations) {
-        const newData = regexTransformation(data, startSubstitution.regex, startSubstitution.method);
-        if (newData) {
-            return newData;
-        }
-    }
-    return prependDebugPrefix(data);
-};
-exports.ghStdoutTransformer = ghStdoutTransformer;
-const regexTransformation = (input, regex, modifier) => {
-    const matches = input.match(regex);
-    if (matches) {
-        return modifier(input, regex);
-    }
-    return null;
-};
-function useUnmodifiedString(input) {
-    return input;
-}
-function removeFirstMatch(input, regex) {
-    return `${input.replace(regex, '$`')}`;
-}
-function replaceFirstMatchWithDebugPrefix(input, regex) {
-    return `${debugPrefix}${input.replace(regex, '$`')}`;
-}
-function replaceFirstMatchWithWarningPrefix(input, regex) {
-    return `::warning::${input.replace(regex, '$`')}`;
-}
-function replaceFirstMatchWithErrorPrefix(input, regex) {
-    return `::error::${input.replace(regex, '$`')}`;
-}
-function replaceFirstMatchWithGroupPrefix(input, regex) {
-    return `::group::${input.replace(regex, '$`')}`;
-}
-function replaceFirstMatchWithEndgroupPrefix(input, regex) {
-    return `::endgroup::${input.replace(regex, '$`')}`;
-}
-function prependDebugPrefix(input) {
-    return `${debugPrefix}${input}`;
-}
 
 
 /***/ }),
