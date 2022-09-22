@@ -74319,7 +74319,9 @@ let Scanner = class Scanner {
                 this.logger.logDebug(`Chrome app executable: ${(_a = scanArguments.chromePath) !== null && _a !== void 0 ? _a : 'system default'}`);
                 const crawlerParameters = this.crawlerParametersBuilder.build(scanArguments);
                 const scanStarted = new Date();
-                const combinedScanResult = yield this.crawler.crawl(crawlerParameters, this.baselineOptionsBuilder.build(scanArguments));
+                const baselineOptions = this.baselineOptionsBuilder.build(scanArguments);
+                this.logger.logDebug(`baselineOptions: ${JSON.stringify(baselineOptions)}`);
+                const combinedScanResult = yield this.crawler.crawl(crawlerParameters, baselineOptions);
                 const scanEnded = new Date();
                 const combinedReportParameters = this.getCombinedReportParameters(combinedScanResult, scanStarted, scanEnded);
                 this.reportGenerator.generateReport(combinedReportParameters);
