@@ -74318,6 +74318,7 @@ let Scanner = class Scanner {
                 this.logger.logDebug(`Starting accessibility scanning of URL ${scanArguments.url}`);
                 this.logger.logDebug(`Chrome app executable: ${(_a = scanArguments.chromePath) !== null && _a !== void 0 ? _a : 'system default'}`);
                 const crawlerParameters = this.crawlerParametersBuilder.build(scanArguments);
+                this.logger.logDebug(`Crawler parameters: ${JSON.stringify(crawlerParameters)}`);
                 const scanStarted = new Date();
                 const baselineOptions = this.baselineOptionsBuilder.build(scanArguments);
                 this.logger.logDebug(`baselineOptions: ${JSON.stringify(baselineOptions)}`);
